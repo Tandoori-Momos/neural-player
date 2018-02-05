@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="player.css">
+
+
+
+
+    <script type="text/javascript">
+      $(document).ready( function() {
+        $('.controls--play-button').click( function() {
+          var txt = 'next';
+
+          var data = 'txt='+txt;
+
+
+
+          $.post('/play', data, function(r) {
+            if(r == 'error') {
+              swal("Error", "An error has occured!", "error");
+            } else {
+              var response = r;
+              var src = response.id; // Source for youtube
+              var name = response.title; // Song title
+              var artist = response.artist;
+
+              document.getElementById('player').src = 'https://www.youtube.com/embed/'+src+'?autoplay=1'; // Change source of iframe
+
+              document.getElementById('song-title').innerHTML = name;
+
+              document.getElementById('artist-name').innerHTML = artist;
+            }
+          });
+        });
+      });
+    </script>
+    <style>
+
+
+
+    </style>
+    <title>Main</title>
+  </head>
+
+  <body>
+    <div class="container">
+
+
+      <!-- Text track file -->
+
+<iframe id = "player" width="420" height="315" src="https://www.youtube.com/embed/TO9a6g1CVe0?autoplay=1" frameborder="0" allowfullscreen></iframe>
+      <!-- Fallback for browsers that don't support the <video> element -->
+
+    </video>
+
+    <section class="music-player">
+  <header class="music-player--banner"></header>
+  <main class="music-player--main">
+    <div class="music-player--progress">
+      <progress class="progress--progress-bar" value="43" max="100"></progress>
+      <div class="progress--time">1:37</div>
+      <div class="progress--time progress--time__end">3:52</div>
+    </div>
+    <div class="music-player--controls">
+      <i class="fa fa-pause controls--play-button"></i>
+
+      <div class="song-info">
+        <div class="song-info--title" id = "song-title">Is This Love</div>
+        <div class="song-info--artist" id = "artist-name">Bob Marley</div>
+      </div>
+      <div class="controls--actions">
+        <i class="fa fa-retweet actions--repeat"></i>
+        <i class="fa fa-backward actions--back"></i>
+        <i class="fa fa-forward actions--forward"></i>
+      </div>
+    </div>
+  </main>
+</section>
+
+  </div>
+</body>
+
+
+
+</html>
