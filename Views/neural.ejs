@@ -5,51 +5,123 @@
     <title></title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/synaptic/1.0.8/synaptic.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-
-    <script>
-      var input = new synaptic.Layer(3); // Thrash Metal -  Death Metal  - Technical Death Metal
-      var output = new synaptic.Layer(3); // Pantera  -  Between the buried and me  -  Death
-
-      input.project(output);
-
-      var trainingData = [
-        {input: [1,0,0], output: [1,0.3,0.6]},
-        {input: [0,1,0], output: [0.3,0.6,1]},
-        {input: [0,0,1], output: [0.2,1,0.6]}
-      ];
-
-      var learningRate = 0.4;
-
-      function train() {
-        for(var i = 0; i < trainingData.length; i++)
-        {
-          input.activate(trainingData[i]["input"]);
-          output.activate();
-          output.propagate(learningRate, trainingData[i]["output"]);
-        }
-      }
-
-      function retrain() {
-          for(var i = 0; i < 1000; i++) {
-              trainingData = _.shuffle(trainingData);
-              train();
-          }
-      }
-       
-      retrain(); // Start the training
-
-      input.activate([0.6,0.5,0.8]);
-      var result = output.activate();
-
-      console.log("Pantera: " + result[0] * 100 + "%");
-      console.log("BTBAM: " + result[1] * 100 + "%");
-      console.log("Death: " + result[2] * 100 + "%");
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" charset="utf-8"></script>
 
 
-    </script>
   </head>
   <body>
-    <button id = "metal">Metal</button>
-      <button id = "instrumental">Instrumental</button>
+    <input type="text" id="ok">
+    <button id = "bt">Calculate</button>
+
+
+    <br><br>  1 = Mazzy Star <br> 2 = Pantera <br> 3 = Marrisa Nadler
   </body>
+
+  <script>
+
+    var bt = document.getElementById('bt');
+    var _res;
+
+    var input = new synaptic.Layer(3);
+    var output = new synaptic.Layer(3); // The Sundays  -  Death  -  Aleah
+
+    input.project(output);
+
+    var trainingData = [
+      {input: [1,0,0], output: [1,0.1,0.4]},
+      {input: [0,1,0], output: [0,1,0.2]},
+      {input: [0,0,1], output: [0.4,0,1]},
+      {input: [1,0,1], output: [0.6,0.3,1]}
+
+    ];
+
+    var learningRate = 0.4;
+
+    function train() {
+      for(var i = 0; i < trainingData.length; i++)
+      {
+        input.activate(trainingData[i]["input"]);
+        output.activate();
+        output.propagate(learningRate, trainingData[i]["output"]);
+      }
+    }
+
+    function retrain() {
+        for(var i = 0; i < 1000; i++) {
+            trainingData = _.shuffle(trainingData);
+            train();
+        }
+    }
+
+
+    retrain(); // Start the training
+
+
+        bt.addEventListener("click", function() {
+
+          var text = $('#ok').val();
+
+          var _arr = text.split(" ");
+
+          var _txt0 = _arr[0];
+          var _txt1 = _arr[1];
+          var _txt2 = _arr[2];
+
+          input.activate([_txt0,_txt1,_txt2]);
+          var result = output.activate();
+
+          console.log("The Sundays: " + result[0] * 100 + "%");
+          console.log("Death: " + result[1] * 100 + "%");
+          console.log("Aleah: " + result[2] * 100 + "%");
+
+          console.log('----------------------------------------------');
+
+
+          function Chance(_score) {
+            if(_score > 0.8)
+            {
+              return "High";
+            } else if(_score < 0.8 && _score > 0.5)
+            {
+              return "Medium";
+            } else if(_score < 0.5 && _score > 0.3) {
+              return "Low";
+            } else {
+              return "Very Low"
+            }
+          }
+          _res = [
+            {
+              band: "The Sundays",
+              score: result[0],
+              chance: Chance(result[0])
+            },
+            {
+              band: "Death",
+              score: result[1],
+              chance: Chance(result[1])
+            },
+            {
+              band: "Aleah",
+              score: result[2],
+              chance: Chance(result[2])
+            }
+          ];
+
+
+
+          for(var i = 0; i < _res.length; i++)
+          {
+            if(_res[i].score > .4)
+            {
+              console.log(_res[i].band + ": " + _res[i].chance);
+            }
+          }
+
+        });
+
+
+
+
+  </script>
 </html>

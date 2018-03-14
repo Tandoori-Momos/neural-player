@@ -32,4 +32,7 @@ app.post('/play', urlencodedParser, function (req, res) {
   var resp = JSON.stringify(_song);
   if (!req.body) return res.sendStatus(400)
   res.send(_song);
+
+  var param = _song.tags;
+  console.log(param.raw)
 })
